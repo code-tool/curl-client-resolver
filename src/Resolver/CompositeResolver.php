@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 namespace Http\Client\Curl\Resolver;
 
 class CompositeResolver implements ResolverInterface
@@ -12,14 +10,25 @@ class CompositeResolver implements ResolverInterface
         $this->queue = $queue;
     }
 
-    public function add(int $priority, ResolverInterface $resolver): CompositeResolver
+    /**
+     * @param int               $priority
+     * @param ResolverInterface $resolver
+     *
+     * @return CompositeResolver
+     */
+    public function add($priority, ResolverInterface $resolver)
     {
         $this->queue->insert($resolver, $priority);
 
         return $this;
     }
 
-    public function resolve(string $host): ?string
+    /**
+     * @param string $host
+     *
+     * @return null|string
+     */
+    public function resolve($host)
     {
         $queue = clone $this->queue;
         while (false === $queue->isEmpty()) {

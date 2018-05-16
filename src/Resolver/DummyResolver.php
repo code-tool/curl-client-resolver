@@ -1,11 +1,14 @@
 <?php
-declare(strict_types=1);
-
 namespace Http\Client\Curl\Resolver;
 
 class DummyResolver implements ResolverInterface
 {
-    public function resolve(string $host): ?string
+    /**
+     * @param string $host
+     *
+     * @return null|string
+     */
+    public function resolve($host)
     {
         return null;
     }
