@@ -8,7 +8,7 @@ class PhpResolver implements ResolverInterface
      *
      * @return array
      */
-    public function resolve($host): array
+    public function resolve($host)
     {
         $resolved = gethostbyname($host);
 

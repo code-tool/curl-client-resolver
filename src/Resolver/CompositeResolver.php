@@ -28,7 +28,7 @@ class CompositeResolver implements ResolverInterface
      *
      * @return array
      */
-    public function resolve(string $host)
+    public function resolve($host)
     {
         $queue = clone $this->queue;
         while (false === $queue->isEmpty()) {

@@ -8,7 +8,7 @@ class DummyResolver implements ResolverInterface
      *
      * @return array
      */
-    public function resolve(string $host)
+    public function resolve($host)
     {
         return [];
     }
