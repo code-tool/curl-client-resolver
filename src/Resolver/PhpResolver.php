@@ -5,10 +5,10 @@ namespace Http\Client\Curl\Resolver;
 
 class PhpResolver implements ResolverInterface
 {
-    public function resolve(string $host): ?string
+    public function resolve(string $host): array
     {
         $resolved = gethostbyname($host);
 
-        return ($resolved !== $host) ? $resolved : null;
+        return ($resolved !== $host) ? [$resolved] : [];
     }
 }
