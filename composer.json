@@ -1,0 +1,25 @@
+{
+    "name": "code-tool/curl-client-resolver",
+    "description": "cURL client",
+    "license": "MIT",
+    "keywords": ["http", "curl"],
+    "prefer-stable": true,
+    "require": {
+        "php": "^7.1",
+        "code-tool/curl-client": "^1.4 || ^3.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Http\\Client\\Curl\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Http\\Client\\Curl\\Tests\\": "tests/"
+        }
+    },
+    "provide": {
+        "php-http/client-implementation": "1.0",
+        "php-http/curl": "1.7"
+    }
+}
