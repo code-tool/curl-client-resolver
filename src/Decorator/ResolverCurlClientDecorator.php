@@ -24,14 +24,18 @@ class ResolverCurlClientDecorator extends AbstractCurlClientDecorator
      */
     public function send(CurlRequest $request)
     {
-        if (null === ($ip = $this->resolver->resolve($request->getUri()->getHost()))) {
+        if (null === ($ips = $this->resolver->resolve($request->getUri()->getHost()))) {
             return parent::send($request);
         }
-        $resovledRequest = $request->withUri($request->getUri()->withHost($ip));
-        try {
-            return parent::send($resovledRequest);
-        } catch (ConnectException $e) {
-            return parent::send($request);
+        foreach ($ips as $ip) {
+            $resovledRequest = $request->withUri($request->getUri()->withHost($ip));
+            try {
+                return parent::send($resovledRequest);
+            } catch (ConnectException $e) {
+                continue;
+            }
         }
+
+        return parent::send($request);
     }
 }

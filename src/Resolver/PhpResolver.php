@@ -6,12 +6,12 @@ class PhpResolver implements ResolverInterface
     /**
      * @param string $host
      *
-     * @return null|string
+     * @return array
      */
-    public function resolve($host)
+    public function resolve($host): array
     {
         $resolved = gethostbyname($host);
 
-        return ($resolved !== $host) ? $resolved : null;
+        return ($resolved !== $host) ? [$resolved] : [];
     }
 }

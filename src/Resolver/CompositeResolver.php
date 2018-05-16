@@ -26,19 +26,19 @@ class CompositeResolver implements ResolverInterface
     /**
      * @param string $host
      *
-     * @return null|string
+     * @return array
      */
-    public function resolve($host)
+    public function resolve(string $host)
     {
         $queue = clone $this->queue;
         while (false === $queue->isEmpty()) {
-            if (null === ($ip = $queue->extract()->resolve($host))) {
+            if ([] === ($ips = $queue->extract()->resolve($host))) {
                 continue;
             }
 
-            return $ip;
+            return $ips;
         }
 
-        return null;
+        return [];
     }
 }

@@ -6,10 +6,10 @@ class DummyResolver implements ResolverInterface
     /**
      * @param string $host
      *
-     * @return null|string
+     * @return array
      */
-    public function resolve($host)
+    public function resolve(string $host)
     {
-        return null;
+        return [];
     }
 }
