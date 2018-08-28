@@ -21,13 +21,14 @@ class ResolverCurlClientDecorator extends AbstractCurlClientDecorator
 
     public function send(CurlRequest $request): CurlResponse
     {
-        if (null === ($ips = $this->resolver->resolve($request->getUri()->getHost()))) {
-            return parent::send($request);
-        }
-        foreach ($ips as $ip) {
-            $resovledRequest = $request->withUri($request->getUri()->withHost($ip));
+        foreach ($this->resolver->resolve($request->getUri()->getHost()) as $ip) {
+            $copy = $request;
+            if (false === $copy->hasHeader('Host')) {
+                $copy = $copy->withHeader('Host', $request->getUri()->getHost());
+            }
+            $copy = $copy->withUri($request->getUri()->withHost($ip));
             try {
-                return parent::send($resovledRequest);
+                return parent::send($copy);
             } catch (ConnectException $e) {
                 continue;
             }
