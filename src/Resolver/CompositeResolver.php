@@ -7,9 +7,9 @@ class CompositeResolver implements ResolverInterface
 {
     private $queue;
 
-    public function __construct(\SplPriorityQueue $queue)
+    public function __construct()
     {
-        $this->queue = $queue;
+        $this->queue = new \SplPriorityQueue();
     }
 
     public function add(int $priority, ResolverInterface $resolver): CompositeResolver
