@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Http\Client\Curl\Decorator;
 
 use Http\Client\Curl\CurlClientInterface;
@@ -17,12 +19,7 @@ class ResolverCurlClientDecorator extends AbstractCurlClientDecorator
         parent::__construct($curlClient);
     }
 
-    /**
-     * @param CurlRequest $request
-     *
-     * @return CurlResponse
-     */
-    public function send(CurlRequest $request)
+    public function send(CurlRequest $request): CurlResponse
     {
         foreach ($this->resolver->resolve($request->getUri()->getHost()) as $ip) {
             $copy = $request;

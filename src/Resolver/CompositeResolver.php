@@ -1,13 +1,15 @@
 <?php
+declare(strict_types=1);
+
 namespace Http\Client\Curl\Resolver;
 
 class CompositeResolver implements ResolverInterface
 {
     private $queue;
 
-    public function __construct(\SplPriorityQueue $queue)
+    public function __construct()
     {
-        $this->queue = $queue;
+        $this->queue = new \SplPriorityQueue();
     }
 
     /**

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Http\Client\Curl\Resolver;
 
 class PhpResolver implements ResolverInterface
