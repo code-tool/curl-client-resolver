@@ -29,6 +29,8 @@ class ResolverCurlClientDecorator extends AbstractCurlClientDecorator
             $copy = $copy->withUri($request->getUri()->withHost($ip));
             try {
                 return parent::send($copy);
+            } catch (\Http\Client\Curl\Exception\TimeoutException $e) {
+                throw $e;
             } catch (ConnectException $e) {
                 continue;
             }
