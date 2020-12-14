@@ -24,7 +24,7 @@ class ResolverCurlClientDecorator extends AbstractCurlClientDecorator
         foreach ($this->resolver->resolve($request->getUri()->getHost()) as $ip) {
             $copy = $this->modifyRequestWithIp($request, $ip);
 
-            $response = $this->sendModifiedRequest($copy);
+            $response = $this->trySendModifiedRequest($copy);
             if (null === $response) {
                 continue;
             }
@@ -47,11 +47,22 @@ class ResolverCurlClientDecorator extends AbstractCurlClientDecorator
         return $copy;
     }
 
-    private function sendModifiedRequest(CurlRequest $request): ?CurlResponse
+    /**
+     * @param CurlRequest $request
+     *
+     * @return CurlResponse|null Null, when we got connection error and should try to use the next resolved IP.
+     */
+    private function trySendModifiedRequest(CurlRequest $request): ?CurlResponse
     {
         try {
             return parent::send($request);
         } catch (ConnectException $e) {
+            // We should skip error only when it is relates to TCP socket connection errors.
+            // Timeout error is not safe to retry (timeout exception introduced in `code-tool/curl-client:5.4.0`)
+            if ($e instanceof \Http\Client\Curl\Exception\TimeoutException) {
+                throw $e;
+            }
+
             return null;
         }
     }
