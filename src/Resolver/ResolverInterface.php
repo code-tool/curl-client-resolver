@@ -5,5 +5,10 @@ namespace Http\Client\Curl\Resolver;
 
 interface ResolverInterface
 {
-    public function resolve(string $host) : array;
+    /**
+     * @param string $host
+     *
+     * @return string[]
+     */
+    public function resolve(string $host): array;
 }
