@@ -22,46 +22,20 @@ class ResolverCurlClientDecorator extends AbstractCurlClientDecorator
     public function send(CurlRequest $request): CurlResponse
     {
         foreach ($this->resolver->resolve($request->getUri()->getHost()) as $ip) {
-            $copy = $this->modifyRequestWithIp($request, $ip);
-
-            $response = $this->trySendModifiedRequest($copy);
-            if (null === $response) {
+            $copy = $request;
+            if (false === $copy->hasHeader('Host')) {
+                $copy = $copy->withHeader('Host', $request->getUri()->getHost());
+            }
+            $copy = $copy->withUri($request->getUri()->withHost($ip));
+            try {
+                return parent::send($copy);
+            } catch (\Http\Client\Curl\Exception\TimeoutException $e) {
+                throw $e;
+            } catch (ConnectException $e) {
                 continue;
             }
-
-            return $response;
         }
 
         return parent::send($request);
-    }
-
-    private function modifyRequestWithIp(CurlRequest $request, string $ip): CurlRequest
-    {
-        $copy = $request;
-        if (false === $copy->hasHeader('Host')) {
-            $copy = $copy->withHeader('Host', $request->getUri()->getHost());
-        }
-
-        $copy = $copy->withUri($request->getUri()->withHost($ip));
-
-        return $copy;
-    }
-
-    /**
-     * @param CurlRequest $request
-     *
-     * @return CurlResponse|null Null, when we got connection error and should try to use the next resolved IP.
-     */
-    private function trySendModifiedRequest(CurlRequest $request): ?CurlResponse
-    {
-        try {
-            return parent::send($request);
-        } catch (\Http\Client\Curl\Exception\TimeoutException $e) {
-            // We should skip error only when it is relates to TCP socket connection errors.
-            // Timeout error is not safe to retry (timeout exception introduced in `code-tool/curl-client:5.4.0`)
-            throw $e;
-        } catch (ConnectException $e) {
-            return null;
-        }
     }
 }
