@@ -56,13 +56,11 @@ class ResolverCurlClientDecorator extends AbstractCurlClientDecorator
     {
         try {
             return parent::send($request);
-        } catch (ConnectException $e) {
+        } catch (\Http\Client\Curl\Exception\TimeoutException $e) {
             // We should skip error only when it is relates to TCP socket connection errors.
             // Timeout error is not safe to retry (timeout exception introduced in `code-tool/curl-client:5.4.0`)
-            if ($e instanceof \Http\Client\Curl\Exception\TimeoutException) {
-                throw $e;
-            }
-
+            throw $e;
+        } catch (ConnectException $e) {
             return null;
         }
     }
