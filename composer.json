@@ -5,7 +5,7 @@
     "keywords": ["http", "curl", "resolver", "dns"],
     "prefer-stable": true,
     "require": {
-        "php": "^7.1",
+        "php": "^7.1 || ^8.0",
         "code-tool/curl-client": "^1.4 || ^3.4 || ^4 || ^5.4"
     },
     "autoload": {
